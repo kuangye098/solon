@@ -15,6 +15,7 @@ solon.logging.appender:
     pattern: "%highlight(%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} [-%t][*%X{traceId}]%tags[%logger{20}]:) %n%msg%n"
   file:
     name: "logs/${solon.app.name}"
+    extension: ".log"
     level: INFO
     pattern: "%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} [-%t][*%X{traceId}]%tags[%logger{20}]: %n%msg%n"
   cloud:
@@ -38,9 +39,9 @@ solon.app:
 
 solon.logging.appender:
   console:
-    pattern: "%d{yyyy-MM-dd HH:mm:ss} %-5level %magenta(${PID:-}) %white(-&#45;&#45;) %-20(%yellow([%20.20thread])) %-55(%cyan(%.32logger{30}:%L)) %msg%n"
+    pattern: "%d{yyyy-MM-dd HH:mm:ss} %-5level %magenta(${PID:-}) %white(---) %-20(%yellow([%20.20thread])) %-55(%cyan(%.32logger{30}:%L)) %msg%n"
   file:
-    pattern: "%d{yyyy-MM-dd HH:mm:ss} %-5level %magenta(${PID:-}) %white(-&#45;&#45;) %-20(%yellow([%20.20thread])) %-55(%cyan(%.32logger{30}:%L)) %msg%n"
+    pattern: "%d{yyyy-MM-dd HH:mm:ss} %-5level ${PID:-} --- %-20([%20.20thread]) %-55(%.32logger{30}:%L) %msg%n"
   
 ```
 

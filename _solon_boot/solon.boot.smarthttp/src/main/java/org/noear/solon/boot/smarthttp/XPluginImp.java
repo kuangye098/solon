@@ -4,9 +4,9 @@ import org.noear.solon.Solon;
 import org.noear.solon.SolonApp;
 import org.noear.solon.boot.ServerProps;
 import org.noear.solon.boot.prop.impl.HttpServerProps;
-import org.noear.solon.boot.smarthttp.http.SmHttpContextHandler;
 import org.noear.solon.boot.smarthttp.http.FormContentFilter;
 import org.noear.solon.core.*;
+import org.noear.solon.core.event.EventBus;
 import org.noear.solon.core.util.LogUtil;
 
 public final class XPluginImp implements Plugin {
@@ -21,7 +21,7 @@ public final class XPluginImp implements Plugin {
         return "smart http 1.1/" + Solon.version();
     }
 
-    private SmHttpServer _server;
+    private SmHttpServerComb _server;
 
     @Override
     public void start(AopContext context) {
@@ -46,12 +46,8 @@ public final class XPluginImp implements Plugin {
         long time_start = System.currentTimeMillis();
 
 
-        final String _wrapHost = props.getWrapHost();
-        final int _wrapPort = props.getWrapPort();
-        _signal = new SignalSim(_name, _wrapHost, _wrapPort, "http", SignalType.HTTP);
-
-        _server = new SmHttpServer();
-        _server.setEnableWebSocket(app.enableWebSocket());
+        _server = new SmHttpServerComb();
+        _server.enableWebSocket(app.enableWebSocket());
         _server.setCoreThreads(props.getCoreThreads());
         if (props.isIoBound()) {
             //如果是io密集型的，加二段线程池
@@ -59,8 +55,15 @@ public final class XPluginImp implements Plugin {
         }
 
         _server.setHandler(Solon.app()::tryHandle);
+
+        //尝试事件扩展
+        EventBus.push(_server);
         _server.start(_host, _port);
 
+
+        final String _wrapHost = props.getWrapHost();
+        final int _wrapPort = props.getWrapPort();
+        _signal = new SignalSim(_name, _wrapHost, _wrapPort, "http", SignalType.HTTP);
         app.signalAdd(_signal);
 
         app.before(-9, new FormContentFilter());

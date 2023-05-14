@@ -18,6 +18,11 @@ public class JlHttpServer implements ServerLifecycle {
     private HTTPServer server = null;
     private Handler handler;
     private Executor executor;
+    private boolean allowSsl = true;
+
+    public void allowSsl(boolean allowSsl) {
+        this.allowSsl = allowSsl;
+    }
 
     public void setHandler(Handler handler) {
         this.handler = handler;
@@ -27,11 +32,12 @@ public class JlHttpServer implements ServerLifecycle {
         this.executor = executor;
     }
 
+
     @Override
     public void start(String host, int port) throws Throwable {
         server = new HTTPServer();
 
-        if (System.getProperty(ServerConstants.SSL_KEYSTORE) != null) {
+        if (allowSsl && System.getProperty(ServerConstants.SSL_KEYSTORE) != null) {
             // enable SSL if configured
             server.setServerSocketFactory(SslContextFactory.create().getServerSocketFactory());
         }

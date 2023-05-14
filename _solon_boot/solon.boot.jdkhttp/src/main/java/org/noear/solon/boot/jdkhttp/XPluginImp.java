@@ -5,6 +5,7 @@ import org.noear.solon.SolonApp;
 import org.noear.solon.boot.ServerProps;
 import org.noear.solon.boot.prop.impl.HttpServerProps;
 import org.noear.solon.core.*;
+import org.noear.solon.core.event.EventBus;
 import org.noear.solon.core.util.ClassUtil;
 import org.noear.solon.core.util.LogUtil;
 
@@ -19,7 +20,7 @@ public final class XPluginImp implements Plugin {
         return "jdk http/" + Solon.version();
     }
 
-    JdkHttpServer _server;
+    JdkHttpServerComb _server;
 
     @Override
     public void start(AopContext context) {
@@ -58,15 +59,19 @@ public final class XPluginImp implements Plugin {
 
         long time_start = System.currentTimeMillis();
 
+
+        _server = new JdkHttpServerComb();
+        _server.setExecutor(props.getBioExecutor("jdkhttp-"));
+        _server.setHandler(Solon.app()::tryHandle);
+
+        //尝试事件扩展
+        EventBus.push(_server);
+        _server.start(_host, _port);
+
+
         final String _wrapHost = props.getWrapHost();
         final int _wrapPort = props.getWrapPort();
         _signal = new SignalSim(_name, _wrapHost, _wrapPort, "http", SignalType.HTTP);
-
-        _server = new JdkHttpServer();
-        _server.setExecutor(props.getBioExecutor("jdkhttp-"));
-        _server.setHandler(Solon.app()::tryHandle);
-        _server.start(_host, _port);
-
         app.signalAdd(_signal);
 
         long time_end = System.currentTimeMillis();
