@@ -96,11 +96,6 @@ public class ContextEmpty extends Context {
         return paramMap().get(key);
     }
 
-    @Override
-    public String param(String key, String def) {
-        return paramMap().getOrDefault(key, def);
-    }
-
     private NvMap paramMap = null;
     @Override
     public NvMap paramMap() {
@@ -115,10 +110,16 @@ public class ContextEmpty extends Context {
         return null;
     }
 
+    Map<String, List<UploadedFile>> filesMap = null;
     @Override
-    public List<UploadedFile> files(String key) throws Exception {
-        return null;
+    public Map<String, List<UploadedFile>> filesMap() throws IOException {
+        if (filesMap == null) {
+            filesMap = new LinkedHashMap<>();
+        }
+
+        return filesMap;
     }
+
 
     @Override
     public String cookie(String key) {
@@ -148,6 +149,15 @@ public class ContextEmpty extends Context {
         return headerMap;
     }
 
+    private Map<String, List<String>> headersMap;
+    @Override
+    public Map<String, List<String>> headersMap() {
+        if (headersMap == null) {
+            headersMap = new LinkedHashMap<>();
+        }
+        return headersMap;
+    }
+
     @Override
     public String sessionId() {
         return null;
@@ -159,7 +169,7 @@ public class ContextEmpty extends Context {
     }
 
     @Override
-    public <T> T session(String name, T def) {
+    public <T> T sessionOrDefault(String name, T def) {
         return null;
     }
 
@@ -274,5 +284,20 @@ public class ContextEmpty extends Context {
     @Override
     public void flush() throws IOException{
 
+    }
+
+    @Override
+    public boolean asyncSupported() {
+        return false;
+    }
+
+    @Override
+    public void asyncStart(long timeout, ContextAsyncListener listener)  {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void asyncComplete() {
+        throw new UnsupportedOperationException();
     }
 }

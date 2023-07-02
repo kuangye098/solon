@@ -1,7 +1,7 @@
 <h1 align="center" style="text-align:center;">
 <img src="solon_icon.png" width="128" />
 <br />
-Solon v2.2.18
+Solon v2.3.7
 </h1>
 <p align="center">
 	<strong>Новая структура разработки приложений Java, меньше, быстрее и проще!</strong>
@@ -61,12 +61,12 @@ Solon v2.2.18
 * Http, WebSocket, Socket, три общих опыта разработки сигналов.
 * Поддерживайте "интубацию" и "ручное управление", свободно управляемое по требованию
 * Не Servlet, который может быть адаптирован к любой базовой структуре связи (минимальная эксплуатация RPC архитектуры на 0,3 м)
-* Самодельный контейнер IOC/AOP. Он не заводится медленнее, потому что плагин становится больше
+* Уникальный дизайн контейнера IOC/AOP. Он не заводится медленнее, потому что плагин становится больше
 * Поддерживаем любые сценарии развития, такие как Web, Data, Job, Remoting, Cloud и т.д
 * Совместить архитектурные модели Handler + Context и Listener + Message
 * Подчеркивает расширение плагина, расширяемое и переключаемое; Адаптация к различным параметрам применения
-* Позволяет бизнес-плагины "включать", "включать"
 * В поддержку "GraalVm Native"
+* Позволяет бизнес-плагины "включать", "вырывать", "управление теплом"
 
 
 ## Экологическая архитектура：
@@ -79,7 +79,7 @@ Solon v2.2.18
 <parent>
     <groupId>org.noear</groupId>
     <artifactId>solon-parent</artifactId>
-    <version>2.2.18</version>   
+    <version>2.3.7</version>   
 </parent>
 
 <dependencies>
@@ -152,7 +152,7 @@ public class HelloServiceImpl implements HelloService{
 * Адрес основной сети：[https://solon.noear.org](https://solon.noear.org)
 * Демо в комплекте с официальной сетью：[https://gitee.com/noear/solon-examples](https://gitee.com/noear/solon-examples)
 * Монометрия проекта：[__test](./__test/) 
-* Более функциональный пример проекта：[solon_demo](https://gitee.com/noear/solon_demo) 、 [solon_api_demo](https://gitee.com/noear/solon_api_demo)  、 [solon_rpc_demo](https://gitee.com/noear/solon_rpc_demo) 、 [solon_socketd_demo](https://gitee.com/noear/solon_socketd_demo) 、 [solon_cloud_demo](https://gitee.com/noear/solon_cloud_demo) 、 [solon_auth_demo](https://gitee.com/noear/solon_auth_demo)
+* Более функциональный пример проекта：[solon_api_demo](https://gitee.com/noear/solon_api_demo)  、 [solon_rpc_demo](https://gitee.com/noear/solon_rpc_demo) 、 [solon_socketd_demo](https://gitee.com/noear/solon_socketd_demo) 、 [solon_cloud_demo](https://gitee.com/noear/solon_cloud_demo) 、 [solon_auth_demo](https://gitee.com/noear/solon_auth_demo)
 
 ## Особая благодарность JetBrains за поддержку проекта open source：
 

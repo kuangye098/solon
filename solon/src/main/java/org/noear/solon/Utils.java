@@ -229,6 +229,10 @@ public class Utils {
         return s == null || s.size() == 0;
     }
 
+    public static boolean isEmpty(Map s) {
+        return s == null || s.size() == 0;
+    }
+
     /**
      * 检查字符串是否为非空
      *
@@ -290,7 +294,7 @@ public class Utils {
      * 获取第一项或者null
      */
     public static <T> T firstOrNull(List<T> list) {
-        if (list.size() > 0) {
+        if (list != null && list.size() > 0) {
             return list.get(0);
         } else {
             return null;
@@ -362,7 +366,7 @@ public class Utils {
      */
     @Deprecated
     public static <T> T newInstance(String className) {
-        return ClassUtil.newInstance(className);
+        return ClassUtil.tryInstance(className);
     }
 
     /**
@@ -370,7 +374,7 @@ public class Utils {
      */
     @Deprecated
     public static <T> T newInstance(String className, Properties prop) {
-        return ClassUtil.newInstance(className, prop);
+        return ClassUtil.tryInstance(className, prop);
     }
 
     /**
@@ -382,7 +386,7 @@ public class Utils {
      */
     @Deprecated
     public static <T> T newInstance(ClassLoader classLoader, String className) {
-        return ClassUtil.newInstance(classLoader, className);
+        return ClassUtil.tryInstance(classLoader, className);
     }
 
     /**
@@ -390,7 +394,7 @@ public class Utils {
      */
     @Deprecated
     public static <T> T newInstance(ClassLoader classLoader, String className, Properties prop) {
-        return ClassUtil.newInstance(classLoader, className, prop);
+        return ClassUtil.tryInstance(classLoader, className, prop);
     }
 
     /**
@@ -646,7 +650,7 @@ public class Utils {
                 if (idx > 0) {
                     idx = idx + 8;
                 } else {
-                    idx = uri.lastIndexOf("/", idx) + 1;
+                    idx = uri.lastIndexOf("/") + 1;
                 }
 
                 uri = uri.substring(5, idx);

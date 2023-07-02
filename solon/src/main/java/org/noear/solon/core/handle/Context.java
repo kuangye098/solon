@@ -4,8 +4,8 @@ import org.noear.solon.Solon;
 import org.noear.solon.Utils;
 import org.noear.solon.annotation.Note;
 import org.noear.solon.core.Bridge;
-import org.noear.solon.core.NdMap;
 import org.noear.solon.core.NvMap;
+import org.noear.solon.core.util.IgnoreCaseMap;
 import org.noear.solon.core.util.IpUtil;
 import org.noear.solon.core.util.PathUtil;
 import org.noear.solon.core.wrap.ClassWrap;
@@ -17,10 +17,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 通用上下文接口（实现：Context + Handler 架构）
@@ -300,7 +297,7 @@ public abstract class Context {
      * */
     public String accept() {
         if (accept == null) {
-            accept = header("Accept", "");
+            accept = headerOrDefault("Accept", "");
         }
 
         return accept;
@@ -387,8 +384,20 @@ public abstract class Context {
 
     /**
      * 获取参数
+     *
+     * @deprecated 2.3
      * */
-    public abstract String param(String name, String def);
+    @Deprecated
+    public String param(String key, String def) {
+        return paramOrDefault(key, def);
+    }
+
+    /**
+     * 获取参数或默认
+     * */
+    public String paramOrDefault(String key, String def) {
+        return paramMap().getOrDefault(key, def);
+    }
 
     /**
      * 获取参数并转为int
@@ -401,7 +410,7 @@ public abstract class Context {
      * 获取参数并转为int
      * */
     public int paramAsInt(String name, int def) {
-        return Integer.parseInt(param(name, String.valueOf(def)));
+        return Integer.parseInt(paramOrDefault(name, String.valueOf(def)));
     }
 
     /**
@@ -415,7 +424,7 @@ public abstract class Context {
      * 获取参数并转为long
      * */
     public long paramAsLong(String name, long def) {
-        return Long.parseLong(param(name, String.valueOf(def)));
+        return Long.parseLong(paramOrDefault(name, String.valueOf(def)));
     }
 
     /**
@@ -429,7 +438,7 @@ public abstract class Context {
      * 获取参数并转为double
      * */
     public double paramAsDouble(String name, double def) {
-        return Double.parseDouble(param(name, String.valueOf(def)));
+        return Double.parseDouble(paramOrDefault(name, String.valueOf(def)));
     }
 
     /**
@@ -491,19 +500,28 @@ public abstract class Context {
         }
     }
 
-    /**
-     * 获取上传文件
-     *
-     * @param name 文件名
-     */
-    public abstract List<UploadedFile> files(String name) throws Exception;
+    public abstract Map<String,List<UploadedFile>> filesMap() throws IOException;
 
     /**
      * 获取上传文件
      *
      * @param name 文件名
      */
-    public UploadedFile file(String name) throws Exception {
+    public List<UploadedFile> files(String name) throws IOException {
+        List<UploadedFile> list = filesMap().get(name);
+        if (list == null) {
+            return Collections.emptyList();
+        } else {
+            return list;
+        }
+    }
+
+    /**
+     * 获取上传文件
+     *
+     * @param name 文件名
+     */
+    public UploadedFile file(String name) throws IOException {
         return Utils.firstOrNull(files(name));
     }
 
@@ -545,8 +563,19 @@ public abstract class Context {
      *
      * @param name header名
      * @param def 默认值
+     * @deprecated 2.3
      */
+    @Deprecated
     public String header(String name, String def) {
+        return headerOrDefault(name, def);
+    }
+
+    /**
+     * 获取 header
+     *
+     * @param name header名
+     */
+    public String headerOrDefault(String name, String def) {
         return headerMap().getOrDefault(name, def);
     }
 
@@ -554,6 +583,20 @@ public abstract class Context {
      * 获取 headerMap
      */
     public abstract NvMap headerMap();
+
+    /**
+     * 获取 header (多值)
+     *
+     * @param name header名
+     */
+    public List<String> headerValues(String name) {
+        return headersMap().get(name);
+    }
+
+    /**
+     * 获取 headersMap
+     */
+    public abstract Map<String, List<String>> headersMap();
 
     protected SessionState sessionState;
 
@@ -584,9 +627,21 @@ public abstract class Context {
      * 获取 session 状态（类型转换，存在风险）
      *
      * @param name 状态名
+     * @deprecated 2.3
+     */
+    @Deprecated
+    public  <T> T session(String name, T def) {
+        return sessionOrDefault(name, def);
+    }
+
+    /**
+     * 获取 session 状态（类型转换，存在风险）
+     *
+     * @param name 状态名
+     * @deprecated 2.3
      */
     @Note("泛型转换，存在转换风险")
-    public abstract  <T> T session(String name, T def);
+    public abstract  <T> T sessionOrDefault(String name, T def);
 
     /**
      * 获取 session 状态，并以 int 型输出
@@ -862,7 +917,11 @@ public abstract class Context {
 
     @Note("转发")
     public void forward(String pathNew) {
-        pathNew(pathNew);
+        if (Utils.isEmpty(Solon.cfg().serverContextPath())) {
+            pathNew(pathNew);
+        } else {
+            pathNew(PathUtil.mergePath(Solon.cfg().serverContextPath(), pathNew));
+        }
 
         Solon.app().tryHandle(this);
         setHandled(true);
@@ -894,12 +953,12 @@ public abstract class Context {
     protected abstract void statusDoSet(int status);
 
 
-    private NdMap attrMap = null;
+    private Map<String, Object> attrMap = null;
 
     @Note("获取自定义特性并转为Map")
     public Map<String, Object> attrMap() {//改为懒加载
         if (attrMap == null) {
-            attrMap = new NdMap();
+            attrMap = new IgnoreCaseMap<>();
         }
 
         return attrMap;
@@ -984,6 +1043,7 @@ public abstract class Context {
         _remoting = remoting;
     }
 
+
     @Note("冲刷")
     public abstract void flush() throws IOException;
 
@@ -992,6 +1052,33 @@ public abstract class Context {
     @Note("关闭响应")
     public void close() throws IOException {
     }
+
+    /**
+     * 是否支持异步
+     * */
+    @Note("是否支持异步")
+    public abstract boolean asyncSupported();
+
+    /**
+     * 异步开始
+     * */
+    @Note("异步开始")
+    public abstract void asyncStart(long timeout, ContextAsyncListener listener);
+
+    /**
+     * 异步开始
+     * */
+    public void asyncStart(){
+        asyncStart(0L, null);
+    }
+
+    /**
+     * 异步完成
+     * */
+    @Note("异步完成")
+    public abstract void asyncComplete() throws IOException;
+
+
 
     /**
      * 用于在处理链中透传处理结果

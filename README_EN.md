@@ -1,7 +1,7 @@
 <h1 align="center" style="text-align:center;">
 <img src="solon_icon.png" width="128" />
 <br />
-Solon v2.2.18
+Solon v2.3.7
 </h1>
 <p align="center">
 	<strong>Java new ecological application development framework, smaller, faster, simpler!</strong>
@@ -61,12 +61,12 @@ Build from scratch. It has its own standards and norms and open ecology. Combina
 * Http, WebSocket, Socket three signal unified development experience (commonly known as: three-source integration)
 * Supports "annotation" and "manual" modes, freely controlled as needed
 * Not Servlet, can adapt to any basic communication framework (minimum 0.3m running rpc architecture)
-* Homemade IOC/AOP container. It won't start slowly just because there are more plug-ins
+* Unique IOC/AOP container design. It won't start slowly just because there are more plug-ins
 * Supports Web, Data, Job, Remoting, Cloud, and other development scenarios
 * The two architecture modes are Handler + Context and Listener + Message
 * Emphasizes plug-in extensibility, expandable and swappable, adaptable to different application scenarios
-* Allows business plug-ins for "hot plugging" and "hot unloading"
 * Supports GraalVm Native packaging
+* Allow service plug-ins to hot-plug, hot-swap, and hot-manage.
 
 ## Ecosystem Architecture Diagram:
 
@@ -78,7 +78,7 @@ Build from scratch. It has its own standards and norms and open ecology. Combina
 <parent>
     <groupId>org.noear</groupId>
     <artifactId>solon-parent</artifactId>
-    <version>2.2.18</version>   
+    <version>2.3.7</version>   
 </parent>
 
 <dependencies>
@@ -150,7 +150,7 @@ public class HelloServiceImpl implements HelloService{
 * Official website address：[https://solon.noear.org](https://solon.noear.org)
 * Official website supporting demos：[https://gitee.com/noear/solon-examples](https://gitee.com/noear/solon-examples)
 * Project unit test：[__test](./__test/)
-* Project more feature examples：[solon_demo](https://gitee.com/noear/solon_demo) 、 [solon_api_demo](https://gitee.com/noear/solon_api_demo)  、 [solon_rpc_demo](https://gitee.com/noear/solon_rpc_demo) 、 [solon_socketd_demo](https://gitee.com/noear/solon_socketd_demo) 、 [solon_cloud_demo](https://gitee.com/noear/solon_cloud_demo) 、 [solon_auth_demo](https://gitee.com/noear/solon_auth_demo)
+* Project more feature examples：[solon_api_demo](https://gitee.com/noear/solon_api_demo)  、 [solon_rpc_demo](https://gitee.com/noear/solon_rpc_demo) 、 [solon_socketd_demo](https://gitee.com/noear/solon_socketd_demo) 、 [solon_cloud_demo](https://gitee.com/noear/solon_cloud_demo) 、 [solon_auth_demo](https://gitee.com/noear/solon_auth_demo)
 
 ## Special thanks to JetBrains for supporting open-source projects：
 

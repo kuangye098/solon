@@ -15,7 +15,6 @@ import org.noear.solon.annotation.Mapping;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 
 /**
@@ -48,7 +47,7 @@ public class Action extends HandlerAide implements Handler {
     private boolean mMultipart;
 
     //path 分析器
-    private PathAnalyzer pathAnalyzer;//路径分析器
+    private PathAnalyzer pathKeysAnalyzer;//路径分析器
     //path key 列表
     private List<String> pathKeys;
 
@@ -124,7 +123,7 @@ public class Action extends HandlerAide implements Handler {
             }
 
             if (pathKeys.size() > 0) {
-                pathAnalyzer = PathAnalyzer.get(path);
+                pathKeysAnalyzer = PathAnalyzer.get(path);
             }
         }
     }
@@ -262,17 +261,22 @@ public class Action extends HandlerAide implements Handler {
 
                 //执行
                 c.result = executeDo(c, obj);
-                if(c.result instanceof Future) {
-                    c.result = ((Future) c.result).get();
-                }
 
                 //设定输出产品（放在这个位置正好）
                 if (Utils.isEmpty(mProduces) == false) {
                     c.contentType(mProduces);
                 }
 
-                //渲染
-                renderDo(c.result, c);
+                //结果处理
+                ActionReturnHandler returnHandler = Solon.app().chainManager().getReturnHandler(method().getReturnType());
+
+                if (returnHandler != null) {
+                    //执行函数
+                    returnHandler.returnHandle(c, this, c.result);
+                } else {
+                    //渲染
+                    renderDo(c.result, c);
+                }
             }
         } catch (Throwable e) {
             e = Utils.throwableUnwrap(e);
@@ -303,8 +307,8 @@ public class Action extends HandlerAide implements Handler {
     }
 
     private void bindPathVarDo(Context c) throws Throwable{
-        if (pathAnalyzer != null) {
-            Matcher pm = pathAnalyzer.matcher(c.pathNew());
+        if (pathKeysAnalyzer != null) {
+            Matcher pm = pathKeysAnalyzer.matcher(c.pathNew());
             if (pm.find()) {
                 for (int i = 0, len = pathKeys.size(); i < len; i++) {
                     c.paramSet(pathKeys.get(i), pm.group(i + 1));//不采用group name,可解决_的问题
@@ -314,20 +318,14 @@ public class Action extends HandlerAide implements Handler {
     }
 
     protected Object executeDo(Context c, Object obj) throws Throwable {
-        String ct = c.contentType();
+        ActionExecuteHandler executeHandler = Solon.app().chainManager()
+                .getExecuteHandler(c, mWrap.getParamWraps().length);
 
-        if (ct != null && mWrap.getParamWraps().length > 0) {
-            //
-            //仅有参数时，才执行执行其它执行器
-            //
-            for (ActionExecutor me : Bridge.actionExecutors()) {
-                if (me.matched(c, ct)) {
-                    return me.execute(c, obj, mWrap);
-                }
-            }
-        }
+        return executeHandler.executeHandle(c, obj, mWrap);
+    }
 
-        return Bridge.actionExecutorDef().execute(c, obj, mWrap);
+    public void render(Object obj, Context c) throws Throwable {
+        renderDo(obj, c);
     }
 
     /**

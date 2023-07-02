@@ -20,10 +20,21 @@ public abstract class NativeDetector {
         return imageCode;
     }
 
+    public static boolean notInNativeImage() {
+        return !imageCode;
+    }
+
     /**
      * 是否在 aot 运行时
      */
     public static boolean isAotRuntime() {
         return aotRuntime;
+    }
+
+    /**
+     * 是否不在 aot 运行时
+     */
+    public static boolean isNotAotRuntime() {
+        return !aotRuntime;
     }
 }

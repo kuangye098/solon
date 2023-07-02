@@ -2,6 +2,7 @@ package org.noear.solon.core;
 
 
 import org.noear.solon.Solon;
+import org.noear.solon.SolonApp;
 import org.noear.solon.Utils;
 import org.noear.solon.annotation.Inject;
 import org.noear.solon.annotation.ProxyComponent;
@@ -346,7 +347,7 @@ public abstract class BeanContainer {
 
         beanForeach(bw -> {
             if (baseType.isAssignableFrom(bw.clz())) {
-                wraps.add(bw.raw());
+                wraps.add(bw);
             }
         });
 
@@ -616,6 +617,11 @@ public abstract class BeanContainer {
                 return;
             }
 
+            if(SolonApp.class.isAssignableFrom(varH.getType())){
+                varH.setValue(Solon.app());
+                return;
+            }
+
             if(varH.getGenericType() != null){
                 //如果是泛型
                 getWrapAsync(varH.getGenericType().getTypeName(), (bw) -> {
@@ -658,7 +664,7 @@ public abstract class BeanContainer {
             //
             // @Inject("${xxx}") //注入配置 ${xxx} or ${xxx:def},只适合单值
             //
-            String name2 = name.substring(2, name.length() - 1).trim();
+            String name2 = findConfigKey(name);
 
             beanInjectConfig(varH, name2, required);
 
@@ -713,7 +719,7 @@ public abstract class BeanContainer {
                 //
                 // @Inject("${xxx}") //注入配置 ${xxx} or ${xxx:def},只适合单值
                 //
-                String name2 = name.substring(2, name.length() - 1).trim();
+                String name2 = findConfigKey(name);
 
                 beanInjectPropertiesDo(name, obj, cfg().getProp(name2), typeInj.required());
 
@@ -727,6 +733,25 @@ public abstract class BeanContainer {
                 }
             }
         }
+    }
+
+    /**
+     * 找到真实的name
+     * @param name 原始name，${a:${b:3}}
+     * @return 返回真实的name
+     */
+    protected String findConfigKey(String name) {
+        String name2 = name.substring(2, name.length() - 1).trim();
+        // 如果定义了默认值且左边没有配置右边是表达式，则找右边
+        int index = name2.indexOf(':');
+        if (index > 0) {
+            String rawName = name2.substring(0, index);
+            String nextName = name2.substring(index + 1);
+            if (nextName.startsWith("${") && !cfg().containsKey(rawName)) {
+                return findConfigKey(nextName);
+            }
+        }
+        return name2;
     }
 
     private void beanInjectPropertiesDo(String name, Object obj, Properties val, boolean required) {
@@ -779,7 +804,7 @@ public abstract class BeanContainer {
                     }
                 }
             } else {
-                Object val2 = ConvertUtil.to(varH.getType(), val);
+                Object val2 = ConvertUtil.to(varH.getType(), varH.getGenericType(), val);
                 varH.setValue(val2);
                 aot().registerEntityType(varH.getType(), varH.getGenericType());
             }

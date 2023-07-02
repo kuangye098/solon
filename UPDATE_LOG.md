@@ -9,8 +9,173 @@
 * 提醒1：之前没有使用弃用接口的，可以直接升级 <br>
 * 提醒2：有使用弃用接口的。建议先升级到 1.12.4；替换弃用代码后，再升级到 2.0.0
 
-### 2.2.19
+
+### 2.3.8
+* 新增 solon.boot.vertx 插件?
+* 新增 solon.cloud.metrics 插件?
+* 优化 单元测试项目结构?
+* 增加 sa-token dao 的 redisson 实现
+* 增加 server.socket.ssl.* 配置?
+* 增加 server.websocket.ssl.* 配置?
+
+
+### 2.3.7
+* 优化 nami 解码器的渲染要求策略
+* 优化 solon.boot.websocket 异步发送机制
+* 优化 solon.boot.websocket.netty 异步发送机制
+* 调整 RunUtil 增加线程池名
+* 调整 StringSerializerRender 开放 serializer 属性
+* 调整 app.router().caseSensitive 默认为 true
+* 增加 CloudEvent 注解在函数上时，支持 AOP 扩展
+* 增加 solon.docs 插件，对网关开发模式的支持
+* 增加 solon.boot.socketd.jdksocket 插件，对 ssl 的支持
+* 增加 server.http.ssl.* 配置
+* 增加 NamiMapping、NamiBody 注解
+* 增加 序列化接口（在渲染之外），可以外面复用（从 StringSerializerRender 开放 serializer）
+* 增加 Context::headersMap, Context::headerValues 接口
+* 修复 solon.serialization.jackson 在某些情况下，序列化 null 会出错的问题
+* 修复 solon.boot.jetty 不能使用资源文件做 ssl 密钥文件的问题
+* wood 升为 1.1.5
+* smarthttp 升为 1.2.6
+* smartsocket 升为 1.5.31
+* sqltoy 升为 5.2.57
+* mybatis-flex 升为 1.4.4
+* beetlsql 升为 3.23.2-RELEASE
+
+### 2.3.6
+* 修复 异步监听可能为null的问题
+* 调整 异步超时默认为30秒（-1L为不限，0L为默认）
+
+### 2.3.5
+* 新增 solon.boot.websocket.netty 插件
+* 增加 solon.boot.jdkhttp 插件，虚拟异步支持（进而支持响应式接口）
+* 增加 solon.boot.jlhttp 插件，虚拟异步支持（进而支持响应式接口）
+* 调整 solon.web.flux 插件，出错时自动结束异步
+* 调整 Context 异步接口机制，只能被调用一次
+* 优化 solon.web.sse 插件，改为纯异步机制（所有 solon.boot.http 已支持异步）
+* 优化 SmartHttp Context 异步接口机制
+* 优化 Servlet 启动打印信息
+* 优化 Context:forward 在有 context-path 时的处理
+* 优化 ContextPathFilter 对根地址的映射处理
+* 修复 pathNew 多次执行后 ContextPathFilter 会失效的问题
+
+### 2.3.4
+* 新增 solon.web.sse 插件（sse: Server Send Events）
+* 新增 solon.web.flux 插件，响应式web开发插件（适用于支持异步的 http server）
+* 增加 mybatis-plus-solon-plugin 插件，原生编译支持（GraalVM Native Image）
+* 增加 solon.scheduling 插件，简单的 Retry 功能
+* 增加 solon.validation 一次性验证所有字段的支持
+* 增加 solon.docs 插件，支持字段 transient 排除
+* 增加 Context 异步控制接口，为响应式web开发提供支持
+* 增加 ActionReturnHandler 接口，之后特别的返回结果可定制。为响应式web开发提供支持
+* 增加 ActionExecuteHandler 接口（替代旧的 ActionExecutor），并交由 chainManager 管理
+* 增加 jetty、undertow 对 Context 异步适配
+* 增加 Inject("{xxx:def}") 默认值转集合和数组支持
+* 完善 mybatis-solon-plugin  原生编译支持
+* 完善 solon.aot 增加 lambda 序列化支持
+* 修复 请求路径动态变化后，路径变量获取失败的问题
+* guava 升为 32.0.0-jre
+* smarthttp 升为 1.2.4
+* smartsocket 升为 1.5.30
+* dromara-plugins 升为 0.0.9
+* forest 升为 1.5.32
+* mybatis-flex 升为 1.4.1
+* sqltoy 升为 5.2.54
+* hutool 升为 5.8.20
+* fastjson2 升为 2.0.34
+* java-websocket 升为 1.5.3
+
+### 2.3.3
+* 调整 solon-cloud-alibaba 快捷包 改用 nacos2,rocketmq5
+* 调整 file-s3-solon-cloud-plugin 插件，不排除 aws-java-sdk-s3（之前为排除）
+* 添加 dromara-plugins 所有插件的版本管理
+* 添加 PathRule 工具类
+* 添加 PathLimiter 用于限制 RouterInterceptor 的范围
+* 添加 MybaitsAdapter::getMapper 增加缓存处理
+* 添加 maxHeaderSize(8k), maxBodySize(2m) 为 server 统一默认配置，不然会出 readToken 错误
+* 添加 Context::sessionOrDefault(),headerOrDefault(),paramOrDefault() 接口
+* 添加 ChainManager::getFilterNodes(),getInterceptorNodes() 接口
+* 优化 AsmProxy 代理类的缓存机制（简化）
+* 优化 Utils::firstOrNull 增加 null 判断
+* 优化 ClassUtil 的异常处理
+* 优化 Context::filesMap() 改抛 IOException 异常
+* 优化 Context::param(key,def) 处理
+* wood 升为 1.1.3
+* nacos2 升为 2.2.3
+* rocketmq5 升为 5.0.5
+* dubbo3 升为 3.2.2
+
+### 2.3.2
+* 调整 mybaits-solon-plugin 插件，添加 configuration.mapperVerifyEnabled 配置（控制是否启用 mapper 校验）
+* 调整 solon.docs 插件，将非 `@Body` model 进行字段拆解
+* activemq 升为 5.15.9
+
+### 2.3.1
+* 新增 solon.data.shardingds 插件
+* 新增 redisson-solon-plugin 插件
+* 调整 solon-swagger2-knife4j 插件的优先级，以便控制 enableDoc
+* 调整 mybatis-solon-plugin 插件，增加 aot 处理适配（支持原生编译了）
+* 调整 mybatis 适配增加 isMapper 检测接口
+* 调整 开放 bean 内部形态注册的限制，之前只能用普通组件注解
+* 调整 应用启动时的事件改由 push 推送（之前是 pushTry）
+* 调整 XxxCacheService 增加新的构造函数
+* 调整 jlhttp Part 的 body string 大小限制改为 MAX_BODY_SIZE（之前为 MAX_HEADER_SIZE）
+* 调整 smarthttp Part 的 body string 大小限制改为 MAX_BODY_SIZE（之前为 MAX_HEADER_SIZE）
+* 调整 jdkhttp Part 的 body string 大小限制改为 MAX_BODY_SIZE（之前为 MAX_HEADER_SIZE）
+* 增加 Context::filesMap() 接口
+* bean-searcher 升为 4.2.0
+* sqltoy 升为 5.2.51
+* redisson 升为 3.21.0
+* netty 升为 4.1.75.Final
+* fastjson2 升为 2.0.33
+* mybatis-flex 升为 1.3.2
+* fastmybatis 升为 2.6.1
+
+### 2.3.0
+* 升级 日志体系到 slf4j 2.x（如果冲突，排除旧的 1.x）!!!
+* 新增 solon.docs 插件!!!
+* 新增 solon-swagger2-knife4j 插件!!!
+* 新增 zipkin-solon-cloud-plugin 插件
+* 新增 etcd-solon-cloud-plugin 插件
 * 新增 fastmybatis-solon-plugin 插件
+* 弃用 `@Dao` `@Repository` `@Service` （改由 `@ProxyComponent` 替代）
+* 增加 ProxyUtil::attach(ctx,clz,obj,handler) 接口
+* 增加 aot 对 methodWrap 参数的自动登记处理
+* 修复 AopContext::getWrapsOfType 返回结果失真的问题
+* 调整 mybatis 按包名扫描只对 `@Mapper` 注解的接口有效（避免其它接口误扫）
+* slf4j 升为 2.0.7
+* log4j2 升为 2.20.0（基于 slf4j 2.x）
+* logback 升为 1.3.7（基于 slf4j 2.x）
+* sqltoy 升为  5.2.48
+* mybatis-flex 升为 1.2.9
+* beetlsql 升为 3.23.1-RELEASE
+* wood 升为 1.1.2
+* redisx 升为 1.4.8
+* water 升为 2.11.0
+* protobuf 升为 3.22.3
+* jackson 升为 2.14.3
+* dubbo3 升为 3.2.1
+* grpc 升为 1.54.1
+* zookeeper 升为 3.7.1
+* nacos2-client 升为 2.2.2
+* nacos1-client 升为 1.4.5
+* jaeger 升为 1.8.1
+
+### 2.2.20
+* 添加 Props::bindTo 接口
+* 优化 日志框架，在 window 下的彩色打印支持
+* snack3 升为 3.2.72
+
+### 2.2.19
+* 调整 日志框架，增加 window 下的彩色打印支持
+* 调整 bio maxThreads core x 32
+* 调整 maxBodySize,maxFileSize 用大于号做判断 (undertow 之外，maxBodySize 相当于 maxFromContentSize)
+* 修复 solon.boot.undertow 的 maxBodySize 配置无效问题
+* 修复 solon.boot.smarthttp + ssl 在某些情况下会慢的问题
+* 修复 maxFileSize 过大会超界的问题
+* smartboot.socket 升为 1.5.28
+* smartboot.http 升为 1.2.1
+* snack3 升为 3.2.71
 
 ### 2.2.18
 * 增加 solon.boot.jdkhttp 对 HttpServerConfigure 接口的支持，方便添加端口及ssl的编程控制

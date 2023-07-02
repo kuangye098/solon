@@ -1,7 +1,7 @@
 <h1 align="center" style="text-align:center;">
 <img src="solon_icon.png" width="128" />
 <br />
-Solon v2.2.18
+Solon v2.3.7
 </h1>
 <p align="center">
 	<strong>Java 新的生态型应用开发框架，更小、更快、更简单！</strong>
@@ -61,12 +61,12 @@ Solon v2.2.18
 * Http、WebSocket、Socket 三种信号统一的开发体验（俗称：三源合一）
 * 支持“注解”与“手动”两种模式，按需自由操控
 * Not Servlet，可以适配任何基础通讯框架（最小 0.3m 运行rpc架构）
-* 自制 IOC/AOP 容器。不会因为插件变多而启动变很慢
+* 独特的 IOC/AOP 容器设计。不会因为插件变多而启动变很慢
 * 支持 Web、Data、Job、Remoting、Cloud 等任何开发场景
 * 兼顾 Handler + Context 和 Listener + Message 两种架构模式
 * 强调插件式扩展，可扩展可切换；适应不同的应用场景
-* 允许业务插件“热插”、“热拨”
 * 支持 GraalVm Native 打包
+* 允许业务插件“热插”、“热拔”、“热管理”
 
 
 ## 生态架构图：
@@ -79,7 +79,7 @@ Solon v2.2.18
 <parent>
     <groupId>org.noear</groupId>
     <artifactId>solon-parent</artifactId>
-    <version>2.2.18</version>   
+    <version>2.3.7</version>   
 </parent>
 
 <dependencies>
@@ -147,12 +147,21 @@ public class HelloServiceImpl implements HelloService{
 | org.noear:solon-cloud     | solon-rpc + consul；快速开发微服务应用                          |
 
 
+## 加入到交流群：
+
+| QQ交流群：22200020                       | 微信交流群（申请时输入：Solon）                     |
+|---------------------------|----------------------------------------|
+| <img src="group_qq.png" width="120" />       | <img src="group_wx.png" width="120" /> 
+
+
+交流群里，会提供 "保姆级" 支持和帮助。如有需要，也可提供技术培训和顾问服务
+
 ## 官网及相关示例：
 
 * 官网地址：[https://solon.noear.org](https://solon.noear.org)
 * 官网配套演示：[https://gitee.com/noear/solon-examples](https://gitee.com/noear/solon-examples)
 * 项目单测：[__test](./__test/) 
-* 项目更多功能示例：[solon_demo](https://gitee.com/noear/solon_demo) 、 [solon_api_demo](https://gitee.com/noear/solon_api_demo)  、 [solon_rpc_demo](https://gitee.com/noear/solon_rpc_demo) 、 [solon_socketd_demo](https://gitee.com/noear/solon_socketd_demo) 、 [solon_cloud_demo](https://gitee.com/noear/solon_cloud_demo) 、 [solon_auth_demo](https://gitee.com/noear/solon_auth_demo)
+* 项目更多功能示例：[solon_api_demo](https://gitee.com/noear/solon_api_demo)  、 [solon_rpc_demo](https://gitee.com/noear/solon_rpc_demo) 、 [solon_socketd_demo](https://gitee.com/noear/solon_socketd_demo) 、 [solon_cloud_demo](https://gitee.com/noear/solon_cloud_demo) 、 [solon_auth_demo](https://gitee.com/noear/solon_auth_demo)
 
 ## 特别感谢JetBrains对开源项目支持：
 

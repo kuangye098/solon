@@ -57,6 +57,15 @@ public class Props extends Properties {
         return getProperty(key);
     }
 
+    public String getOr(String key, String key2) {
+        String tmp = getProperty(key);
+        if (Utils.isEmpty(tmp)) {
+            return getProperty(key2);
+        } else {
+            return tmp;
+        }
+    }
+
     /**
      * @param expr 兼容 ${key} or key or ${key:def} or key:def
      */
@@ -221,6 +230,11 @@ public class Props extends Properties {
 
     public <T> T getBean(Class<T> clz) {
         return PropsConverter.global().convert(this, clz);
+    }
+
+    public <T> T bindTo(T obj) {
+        PropsConverter.global().convert(this, obj, null, null);
+        return obj;
     }
 
     /**

@@ -38,9 +38,18 @@ public class WebSocketTestSelf {
             //System.out.println("还没有打开:" + client.getReadyState());
         }
         System.out.println("建立websocket连接");
-        client.send("dddc");
+        Exception errors = null;
+        try {
+            client.send("test0");
+            client.send("test1");
+            client.send("test2");
+            client.send("test3");
+        }catch (Exception e){
+            errors = e;
+        }
 
-        Thread.sleep(100);
+        assert errors == null;
+        System.out.println("测试完成...");
     }
 
     @Test
@@ -64,6 +73,10 @@ public class WebSocketTestSelf {
         session.sendAsync("test3");
 
         assert check.get(2, TimeUnit.SECONDS);
+
+        session.close();
+
+        Thread.sleep(100);
     }
 }
 
